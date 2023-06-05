@@ -54,7 +54,7 @@ class LSTNet(nn.Module):
 
 
 
-        # spatial Attention
+        # spatial self-attention
         if self.is_SSA:
             self.encoder_f = nn.LSTM(input_size=self.P, hidden_size=128, num_layers=1, batch_first=True)
             self.attention_f = ScaledDotProductAttention(d_model=128, d_k=128, d_v=128, h=2)
