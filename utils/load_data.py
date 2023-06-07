@@ -74,7 +74,7 @@ class Data_utility(object):
         self.P = window
         self.h = horizon
         d = np.asarray(load_data(file_name, file_name[-3:]))
-        self.rawdat = d
+        self.rawdat = d[:500,:]
         print(self.rawdat.shape)
         self.dat = np.zeros(self.rawdat.shape)
         self.n, self.m = self.dat.shape

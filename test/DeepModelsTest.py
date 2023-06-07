@@ -13,7 +13,7 @@ from utils.metrics import *
 params={
     'data': '../dataset/commodity.npy',
     'horizon': 1,
-    'window': 30,
+    'window': 32,
     'highway_window': 14,
     'skip': -1,
     'model': 'LSTNet',
@@ -22,7 +22,7 @@ params={
     'hidCNN': 50,
     'hidSkip': 0,
     'L1Loss': False,
-    'epochs': 50,
+    'epochs': 150,
     'batch_size': 64,
     'output_fun': 'linear',
     'dropout': 0.2,
@@ -35,7 +35,11 @@ params={
     'normalize': 2,
     'cuda': 0,
     'gpu': 0,
-    'variables': 20
+    'variables': 20,
+    'input_dim': 137,
+    'sci_kernel_size': 5,
+    'sci_hidden_size': 1
+
 }
 
 def evaluate(data, X, Y, model, evaluateL2, evaluateL1, batch_size, ifsave=False, ds='ds'):
@@ -47,6 +51,8 @@ def evaluate(data, X, Y, model, evaluateL2, evaluateL1, batch_size, ifsave=False
     test = None
 
     for X, Y in data.get_batches(X, Y, batch_size, False):
+        # print(X.shape)
+        # print(Y.shape)
         output = model(X)
 
         scale = data.scale.expand(output.size(0), data.m)
@@ -135,6 +141,12 @@ def ModelTest(params):
     parser.add_argument('--L1Loss', type=bool, default=params['L1Loss'])
     parser.add_argument('--normalize', type=int, default=params['normalize'])
     parser.add_argument('--output_fun', type=str, default=params['output_fun'])
+
+    # sci block
+    parser.add_argument('--input_dim', type=int, default=params['input_dim'])
+    parser.add_argument('--sci_kernel_size', type=int, default=params['sci_kernel_size'])
+    parser.add_argument('--sci_hidden_size', type=int, default=params['sci_hidden_size'])
+
     args = parser.parse_args()
 
     Data = Data_utility(params['data'], 0.6, 0.2, params['cuda'], params['horizon'], params['window'],
@@ -229,11 +241,11 @@ def main():
 
     params['data'] = '../dataset/solar_AL.txt'
     params['model'] = 'LSTNet'
-    params['save'] = '../save/solar_AL_LSTNet_horizon3_skip24_ssa.pt'
+    params['save'] = '../save/solar_AL_horizon3_skip24_sci.pt'
     params['horizon'] = 3
     params['skip'] = 24
     params['hidSkip'] = 10
-    params['batch_size'] = 4
+    params['batch_size'] = 64
     ModelTest(params)
     # run_model(params)
 
